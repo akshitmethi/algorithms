@@ -10,18 +10,31 @@ class flatten():
 				self.adj[pair[0]] = [pair[1]]
 
 	def read_graph_util(self,s,resList):
+		if(self.visited.get(s)):
+			if(len(resList)>0):
+				self.addParent(resList,s)
+			return
 		resList.append(s)
 		if(not self.adj.get(s)):
 			self.flattenStruct.append(resList)
 			return
+		self.visited[s]=1
 		for node in self.adj.get(s):
 			self.read_graph_util(node,resList.copy())
 
+	def addParent(self,parent,child):
+		print("parent:",parent)
+		print("child: ",child)
+		for ls in self.flattenStruct:
+			if(ls[0]==child):
+				ls = [ls.insert(0,parent[x]) for x in reversed(range(len(parent)))]
+
 	def read_graph(self):
 		self.flattenStruct=[]
+		self.visited=dict()
 		for node in self.adj.keys():
 			resList=[]
-			self.read_graph_util(node,resList.copy())
+			self.read_graph_util(node,resList)
 
 	def getFlatten(self):
 		self.read_graph()
@@ -35,13 +48,13 @@ class flatten():
 		return d
 
 	def getDF(self):
-		resultSet = self.getT3Tuple()
+		resultSet = self.getFlatten()
 		maxLength = 0
 		for arr in resultSet:
 			l = len(arr)
 			if(l>maxLength):
 				maxLength=l
-		return pd.DataFrame(resultSet,columns=["T3 Job"]+["job"+str(i) for i in range(maxLength-1)])
+		return pd.DataFrame(resultSet,columns=["job"+str(i) for i in range(maxLength)])
 
 
 
