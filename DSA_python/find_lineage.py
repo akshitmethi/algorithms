@@ -3,11 +3,11 @@ import pandas as pd
 class flatten():
 	def __init__(self,ls):
 		self.adj = dict()
-		for pair in test:
-			if(self.adj.get(pair[0])):
-				self.adj[pair[0]].append(pair[1])
+		for pair in ls:
+			if(self.adj.get(pair[1])):
+				self.adj[pair[1]].append(pair[0])
 			else:
-				self.adj[pair[0]] = [pair[1]]
+				self.adj[pair[1]] = [pair[0]]
 
 	def read_graph_util(self,s,resList):
 		if(self.visited.get(s)):
@@ -57,6 +57,8 @@ class flatten():
 		return pd.DataFrame(resultSet,columns=["job"+str(i) for i in range(maxLength)])
 
 
-
-obj = flatten(<input df>.as_matrix())
+df = pd.read_csv("sample.csv")
+df = df[["upstream","downstream"]]
+obj = flatten(df.values)
 resultDF = obj.getDF()
+resultDF.to_csv(r"sample_op.csv",index=False)
